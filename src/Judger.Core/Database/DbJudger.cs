@@ -97,12 +97,19 @@ namespace Judger.Core.Database
 
             try
             {
-                DbDataReader reader = stdOperator.ExecuteQuery(stdOperateCmd ?? stdQueryCmd);
+                
                 if (stdOperateCmd != null)
+				{
+                    stdOperator.ExecuteNonQuery(stdOperateCmd);
                     outputData = stdOperator.ReadDbData();
+				}
 
                 if (stdQueryCmd != null)
+				{
+                    DbDataReader reader = stdOperator.ExecuteQuery(stdQueryCmd);
                     queryData = BaseDbOperator.ReadQueryData(reader);
+                }
+                    
             }
             catch (Exception ex)
             {

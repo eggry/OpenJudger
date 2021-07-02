@@ -18,7 +18,7 @@ namespace Judger.Adapter.SDNUOJ.Entity
         [JsonProperty(PropertyName = "dataversion")]
         public string DataVersion { get; set; }
 
-        [JsonProperty(PropertyName = "timeliest")]
+        [JsonProperty(PropertyName = "timelimit")]
         public string TimeLimit { get; set; }
 
         [JsonProperty(PropertyName = "memorylimit")]

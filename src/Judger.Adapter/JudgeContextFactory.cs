@@ -37,7 +37,7 @@ namespace Judger.Adapter
             bool specialJudge = false, bool dbJudge = false)
         {
             JudgeType judgeType = JudgeType.ProgramJudge;
-            if (dbJudge)
+            if (language=="mysql")
                 judgeType = JudgeType.DbJudge;
             else if (specialJudge)
                 judgeType = JudgeType.SpecialJudge;

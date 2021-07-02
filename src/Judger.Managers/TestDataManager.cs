@@ -18,10 +18,11 @@ namespace Judger.Managers
         private const string ConstVersionFilename = "version.txt";
         private const string ConstDirInput = "input";
         private const string ConstDirOutput = "output";
-        private const string ConstDirQuery = "query";
-        private const string ConstDirOperation = "oper";
         private const string ConstDirSpj = "spj";
-        private const string ConstDirDb = "db";
+        private const string ConstDirDatabase = "db";
+        private const string ConstDirStd = "std";
+        private const string ConstQueryFile = "query";
+        private const string ConstOperationFile = "op";
 
         // 数据锁字典, 防止统一题目测试数据争用
         private static readonly ConcurrentDictionary<string, object> DataLockDic;
@@ -191,9 +192,9 @@ namespace Judger.Managers
         {
             lock (GetDataLock(problemId))
             {
-                string dirPath = Cmb(Config.TestDataDirectory, problemId, ConstDirDb);
+                string dirPath = Cmb(Config.TestDataDirectory, problemId);
 
-                string[] inputFiles = Directory.GetFiles(Cmb(dirPath, ConstDirInput));
+                string[] inputFiles = Directory.GetFiles(Cmb(dirPath, ConstDirDatabase));
 
                 string[] dataNames = (
                     from x in inputFiles
@@ -212,50 +213,28 @@ namespace Judger.Managers
         {
             lock (GetDataLock(problemId))
             {
-                string dirPath = Cmb(Config.TestDataDirectory, problemId, ConstDirDb);
+                string dirPath = Cmb(Config.TestDataDirectory, problemId);
 
-                string inputFile = Cmb(dirPath, ConstDirInput, dataName + '.' + dbType);
-
-                string operFile = (
-                    from x in Directory.GetFiles(Cmb(dirPath, ConstDirOperation))
-                    where Path.GetFileNameWithoutExtension(x).EqualsIgnoreCase(dbType.ToString())
-                    select x
-                ).FirstOrDefault();
-
-                string queryFile = (
-                    from x in Directory.GetFiles(Cmb(dirPath, ConstDirQuery))
-                    where Path.GetFileNameWithoutExtension(x).EqualsIgnoreCase(dbType.ToString())
-                    select x
-                ).FirstOrDefault();
+                string inputFile = Cmb(dirPath, ConstDirDatabase, dataName + '.' + dbType);
+                string operFile = Cmb(dirPath, ConstDirStd, ConstOperationFile + '.' + dbType);
+                string queryFile = Cmb(dirPath, ConstDirStd, ConstQueryFile + '.' + dbType);
 
                 if (!File.Exists(inputFile))
                     throw new JudgeException("Database input file not found: " + inputFile);
 
-                if (operFile == null && queryFile == null)
+                if (!File.Exists(operFile)&& !File.Exists(queryFile))
                     throw new JudgeException("Database output file not found: " + inputFile);
 
                 return new DbTestData
                 {
                     Name = dataName,
                     Input = File.ReadAllText(inputFile),
-                    Operation = operFile != null ? File.ReadAllText(operFile) : null,
-                    Query = queryFile != null ? File.ReadAllText(queryFile) : null
+                    Operation = File.Exists(operFile) ? File.ReadAllText(operFile) : null,
+                    Query = File.Exists(queryFile) ? File.ReadAllText(queryFile) : null
                 };
             }
         }
 
-        /// <summary>
-        /// 检查题目是否为数据库题目
-        /// </summary>
-        public static bool CheckIsDatabaseJudge(string problemId)
-        {
-            string dbDir = Cmb(Config.TestDataDirectory, problemId, ConstDirDb);
-
-            lock (GetDataLock(problemId))
-            {
-                return Directory.Exists(dbDir) && Directory.GetDirectories(dbDir).Length > 0;
-            }
-        }
 
         /// <summary>
         /// 获取测试数据锁
