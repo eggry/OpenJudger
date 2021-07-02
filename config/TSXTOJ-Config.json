@@ -1,0 +1,54 @@
+﻿{
+  "AdapterDllPath": "Judger.Adapter.SDNUOJ.dll",
+  "JudgerName": "judger",
+  "Password": "123456",
+  "TaskFetchInterval": 1000,
+  "FetchTimeout": 5000,
+  "TaskFetchUrl": "http://localhost:8000/judge/getpending",
+  "TestDataFetchUrl": "http://localhost:8000/judge/getproblem",
+  "ResultSubmitUrl": "http://localhost:8000/judge/updatestatus",
+  "TestDataDirectory": "TestData",
+  "LogDirectory": "Log",
+  "MaxQueueSize": 1,
+  "MaxRunning": 1,
+  "InterceptUnsafeCode": true,
+  "InterceptionRules": "InterceptionRules.txt",
+  "MonitorInterval": 10,
+  "MinimumMemoryCost": 256,
+  "AdditionalConfigs": {
+    "LoginUrl": "http://localhost:8000/judge/login"
+  },
+  "Languages": [
+    {
+      "Name": "g++",
+      "JudgeDirectory": "JudgeTemp\\CppJudge",
+      "NeedCompile": true,
+      "SourceCodeFileName": "src.cpp",
+      "SourceCodeFileExtension": "",
+      "ProgramFileName": "",
+      "MaxCompileTime": 20000,
+      "CompilerPath": "C:\\Program Files\\mingw64\\bin\\g++.exe",
+      "CompilerWorkDirectory": "C:\\Program Files\\mingw64\\bin",
+      "CompilerArgs": "-w -o2 <tempdir>src.cpp -o <tempdir>program.exe",
+      "RunnerPath": "<tempdir>program.exe",
+      "RunnerWorkDirectory": "C:\\Program Files\\mingw64\\bin",
+      "RunnerArgs": "",
+      "UseUtf8": true,
+      "RunningInVm": false,
+      "OutputLimit": 67108864,
+      "TimeCompensation": 1.0
+    }
+  ],
+  "Databases": [
+    {
+      "Name": "mysql",
+      "CaseSensitive": false,
+      "DriverPath": "Pomelo.Data.MySql.dll",
+      "Server": "localhost",
+      "Database": "judger",
+      "User": "root",
+      "Password": "test123",
+      "ConnStringTemplate": "Server=<Server>;Database=<Database>;User=<User>;Password=<Password>;CharSet=utf8;"
+    }
+  ]
+}
